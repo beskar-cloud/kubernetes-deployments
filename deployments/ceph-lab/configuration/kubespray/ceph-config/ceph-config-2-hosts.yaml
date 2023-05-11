@@ -1,0 +1,119 @@
+all:
+  hosts:
+    node1:
+      ansible_host: 10.30.0.150
+      ip: 10.30.0.150
+      access_ip: 10.30.0.150
+    node2:
+      ansible_host: 10.30.0.221
+      ip: 10.30.0.221
+      access_ip: 10.30.0.221
+    node3:
+      ansible_host: 10.30.0.43
+      ip: 10.30.0.43
+      access_ip: 10.30.0.43
+    node4:
+      ansible_host: 10.30.0.11
+      ip: 10.30.0.11
+      access_ip: 10.30.0.11
+    node5:
+      ansible_host: 10.30.0.162
+      ip: 10.30.0.162
+      access_ip: 10.30.0.162
+    node6:
+      ansible_host: 10.30.0.234
+      ip: 10.30.0.234
+      access_ip: 10.30.0.234
+  children:
+    kube_control_plane:
+      hosts:
+        node1:
+        node2:
+        node3:
+        node4:
+        node5:
+    kube_node:
+      hosts:
+        node1:
+        node2:
+        node3:
+        node4:
+        node5:
+        node6:
+    etcd:
+      hosts:
+        node1:
+        node2:
+        node3:
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:
+        ceph_rack1:
+        ceph_rack2:
+        ceph_rack3:
+    calico_rr:
+      hosts: {}
+    kube_compute_node:
+      hosts:
+        node6:   
+      vars:
+        node_labels:
+          openstack-compute-node: enabled
+          openvswitch: enabled 
+          rook-ceph-operator: "true"
+          topology.kubernetes.io/zone: ostack-vm
+          topology.rook.io/rack: rack3
+    ceph_rack1:
+      hosts:
+        node1:
+        node2:
+      vars:
+        node_labels:
+          ceph-rgw: enabled
+          horizon: enabled 
+          openstack-control-plane-vnc: enabled
+          openstack-control-plane: enabled
+          openstack-mon-node: enabled
+          openstack-mon: enabled
+          openvswitch: enabled
+          rook-ceph-operator: "true"
+          rook-ceph-role: storage-node
+          topology.kubernetes.io/zone: ostack-vm
+          linuxbridge: enabled
+          topology.rook.io/rack: rack1
+    ceph_rack2:
+      hosts:
+        node3:
+        node4:
+      vars:
+        node_labels:
+          ceph-rgw: enabled
+          horizon: enabled 
+          openstack-control-plane-vnc: enabled
+          openstack-control-plane: enabled
+          openstack-mon-node: enabled
+          openstack-mon: enabled
+          openvswitch: enabled
+          rook-ceph-operator: "true"
+          rook-ceph-role: storage-node
+          topology.kubernetes.io/zone: ostack-vm
+          linuxbridge: enabled
+          topology.rook.io/rack: rack2
+    ceph_rack3:
+      hosts:
+        node5:
+      vars:
+        node_labels:
+          ceph-rgw: enabled
+          horizon: enabled 
+          openstack-control-plane-vnc: enabled
+          openstack-control-plane: enabled
+          openstack-mon-node: enabled
+          openstack-mon: enabled
+          openvswitch: enabled
+          rook-ceph-operator: "true"
+          rook-ceph-role: storage-node
+          topology.kubernetes.io/zone: ostack-vm
+          linuxbridge: enabled
+          topology.rook.io/rack: rack3

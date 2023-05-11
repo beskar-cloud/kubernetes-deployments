@@ -1,0 +1,10 @@
+kube_vip_enabled: true
+kube_vip_enableServicesElection: true
+
+# HA for control-plane, requires a VIP
+kube_vip_controlplane_enabled: true
+kube_vip_address: 10.30.0.5
+kube_vip_arp_enabled: true
+
+# public FIP addresses
+supplementary_addresses_in_ssl_keys: [1.1.167.152, 1.1.167.171]
